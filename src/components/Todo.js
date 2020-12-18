@@ -1,51 +1,44 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Heading from "./Heading";
 import NewTodo from "./NewTodo";
 import TodosList from "./TodosList";
 
-export class Todo extends Component {
-  state = {
-    todos: [
-      { title: "standup meet by 10", completed: false },
-      { title: "meeting with product manager", completed: true },
-      { title: "standup meet of updates by 6", completed: false },
-    ],
-    todo: { title: "", completed: false },
-    currentTodo: 0,
-  };
-  onclick = (e) => {
-    this.setState({
-      todos: this.state.todos.map((todo, i) => {
+export function Todo() {
+  // const [text, settext] = useState({})
+  const [todos, settodos] = useState([
+    { title: "standup meet by 10", completed: false },
+    { title: "meeting with product manager", completed: true },
+    { title: "standup meet of updates by 6", completed: false },
+  ]);
+
+  const [todo, settodo] = useState({ title: "", completed: false });
+
+  const onclick = (e) => {
+    settodos(
+      todos.map((todo, i) => {
         if (i == e.target.id) {
           return { ...todo, completed: !todo.completed };
         }
         return todo;
-      }),
-    });
+      })
+    );
   };
 
-  onchange = (e) => {
-    this.setState({ todo: { ...this.state.todo, title: e.target.value } });
+  const onchange = (e) => {
+    settodo({ ...todo, title: e.target.value });
   };
-  handleSubmit = () => {
-    this.setState({
-      todos: [...this.state.todos, this.state.todo],
-      todo: { ...this.state.todo, title: "" },
-    });
+  const handleSubmit = () => {
+    settodos([...todos, todo]);
+    settodo({ ...todo, title: "" });
   };
-  render() {
-    return (
-      <div>
-        <Heading />
-        <TodosList todos={this.state.todos} onclick={this.onclick} />
-        <NewTodo
-          todo={this.state.todo}
-          onchange={this.onchange}
-          handleSubmit={this.handleSubmit}
-        />
-      </div>
-    );
-  }
+
+  return (
+    <div>
+      <Heading />
+      <TodosList todos={todos} onclick={onclick} />
+      <NewTodo todo={todo} onchange={onchange} handleSubmit={handleSubmit} />
+    </div>
+  );
 }
 
 export default Todo;
